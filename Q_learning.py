@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 # -----------
 rewards = []
 episodes = []
+
 def train_q_learning(env,
                      no_episodes,
                      epsilon,
@@ -16,12 +17,15 @@ def train_q_learning(env,
                      epsilon_decay,
                      alpha,
                      gamma,
-                     q_table_save_path="q_table.npy"):
+                     q_table_save_path="q_table.npy",
+                     train = None):
 
     # Initialize the Q-table:
     # -----------------------
-    q_table = np.zeros((env.y_size, env.x_size, env.action_space.n))
-
+    if train == True:
+        q_table = np.zeros((env.y_size, env.x_size, env.action_space.n))
+    if train == False:
+        q_table = np.load("q_table.npy")
     # Q-learning algorithm:
     # ---------------------
     #! Step 1: Run the algorithm for fixed number of episodes
@@ -79,12 +83,16 @@ def train_q_learning(env,
     np.save(q_table_save_path, q_table)
     print("Saved the Q-table.")
     plt.plot(episodes, rewards)
+    plt.title("Reward vs Epoch")
+    plt.legend()
+    plt.xlabel("Epoch")
+    plt.ylabel("Reward")
     plt.show()
 
 # Function 2: Visualize the Q-table
 # -----------
 def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), (8, 4), (9, 7), (12, 7), (14, 5)],
-                      goal_coordinates=[1,6],
+                      goal_coordinates=tuple([1,6]),
                       wall_states = [],
                       actions=["Up", "Down", "Right", "Left"],
                       q_values_path="q_table.npy"):
@@ -108,7 +116,7 @@ def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), 
             # Mask the goal state's Q-value for visualization:
             # ------------------------------------------------
             mask = np.zeros_like(heatmap_data, dtype=bool)
-            mask[tuple(goal_coordinates)] = True
+            mask[goal_coordinates] = False
             mask[hell_state_coordinates[0]] = True
             mask[hell_state_coordinates[1]] = True
             mask[hell_state_coordinates[2]] = True
