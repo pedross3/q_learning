@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 # -----------
 rewards = []
 episodes = []
+epsilons = []
 
 def train_q_learning(env,
                      no_episodes,
@@ -68,8 +69,12 @@ def train_q_learning(env,
 
         #! Step 6: Perform epsilon decay
         #! -------
-        epsilon = max(epsilon_min, epsilon * epsilon_decay)
+        if epsilon > epsilon_min:
+            epsilon = epsilon * epsilon_decay
+        else:
+            epsilon = 0
         print(f"Episode {episode + 1}: Total Reward: {total_reward}")
+        epsilons.append(epsilon*10)
         rewards.append(total_reward)
         episodes.append(episode)
 
@@ -82,6 +87,7 @@ def train_q_learning(env,
     #! -------
     np.save(q_table_save_path, q_table)
     print("Saved the Q-table.")
+    plt.plot(epsilons, 'g', label = "Epsilon")
     plt.plot(episodes, rewards)
     plt.title("Reward vs Epoch")
     plt.legend()

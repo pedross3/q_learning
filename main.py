@@ -6,7 +6,7 @@ from Q_learning import train_q_learning, visualize_q_table
 
 # User definitions:
 # -----------------
-train = False
+train = True
 visualize_results = True
 
 random_initialization = True  # If True, the Q-table will be initialized randomly
