@@ -87,8 +87,8 @@ def train_q_learning(env,
     #! -------
     np.save(q_table_save_path, q_table)
     print("Saved the Q-table.")
+    plt.plot(episodes, rewards, label = "Rewards")
     plt.plot(epsilons, 'g', label = "Epsilon")
-    plt.plot(episodes, rewards)
     plt.title("Reward vs Epoch")
     plt.legend()
     plt.xlabel("Epoch")
@@ -122,7 +122,7 @@ def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), 
             # Mask the goal state's Q-value for visualization:
             # ------------------------------------------------
             mask = np.zeros_like(heatmap_data, dtype=bool)
-            mask[goal_coordinates] = False
+            mask[goal_coordinates] = True
             mask[hell_state_coordinates[0]] = True
             mask[hell_state_coordinates[1]] = True
             mask[hell_state_coordinates[2]] = True
