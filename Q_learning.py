@@ -24,8 +24,11 @@ def train_q_learning(env,
     # Initialize the Q-table:
     # -----------------------
     if train == True:
+        # will overwrite the values from .npy
         q_table = np.zeros((env.y_size, env.x_size, env.action_space.n))
+
     if train == False:
+        # won't overwrite and reuse what's already there
         q_table = np.load("q_table.npy")
     # Q-learning algorithm:
     # ---------------------
@@ -47,7 +50,7 @@ def train_q_learning(env,
             else:
                 action = np.argmax(q_table[state])  # Exploit
 
-            next_state, reward, done, _ = env.step(action)
+            next_state, reward, done, _ = env.step(action) # here receives objects from step function (the return line)
             # env.render()
 
             next_state = tuple(next_state)
@@ -55,11 +58,14 @@ def train_q_learning(env,
 
             #! Step 4: Update the Q-values using the Q-value update rule
             #! -------
+
+            # here pray for the Q-learning gods for their blessing:
             q_table[state][action] = q_table[state][action] + alpha * \
                 (reward + gamma *
                  np.max(q_table[next_state]) - q_table[state][action])
+            # and write on the .npy
 
-            state = next_state
+            state = next_state # moves on to the next state
 
             #! Step 5: Stop the episode if the agent reaches Goal or Hell-states
             #! -------
@@ -74,7 +80,8 @@ def train_q_learning(env,
         else:
             epsilon = 0
         print(f"Episode {episode + 1}: Total Reward: {total_reward}")
-        epsilons.append(epsilon*10)
+
+        epsilons.append(epsilon*10) # for scaling reasons on the plot
         rewards.append(total_reward)
         episodes.append(episode)
 
@@ -87,6 +94,8 @@ def train_q_learning(env,
     #! -------
     np.save(q_table_save_path, q_table)
     print("Saved the Q-table.")
+    # matplotlib stuff
+
     plt.plot(episodes, rewards, label = "Rewards")
     plt.plot(epsilons, 'k', label = "Epsilon")
     plt.title("Reward vs Epoch")
@@ -112,9 +121,9 @@ def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), 
 
         # Create subplots for each action:
         # --------------------------------
-        _, axes = plt.subplots(2, 2, figsize=(10,10))
+        _, axes = plt.subplots(2, 2, figsize=(10,10)) # here creates a grid for 2x2
         axes = axes.flatten() # In order to plot 2x2
-        
+    
         for i, action in enumerate(actions):
             ax = axes[i]
             heatmap_data = q_table[:, :, i].copy()
@@ -133,6 +142,7 @@ def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), 
             mask[hell_state_coordinates[7]] = True
 
             for t in wall_states:
+                # so i don't suffer creating the wall masks
                 mask[tuple(t)] = True
 
             # Create a new figure for each action
