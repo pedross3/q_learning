@@ -9,7 +9,7 @@ from Q_learning import train_q_learning, visualize_q_table
 train = True
 visualize_results = True
 
-random_initialization = True  # If True, the Q-table will be initialized randomly
+random_initialization = False  # If True, the Q-table will be initialized randomly
 
 learning_rate = 0.01  # Learning rate
 gamma = 0.99  # Discount factor
@@ -82,10 +82,3 @@ if visualize_results:
                       q_values_path="q_table.npy",
                       wall_states=env.wall_states)
 
-
-"""
-TODO:
-1. plot a graph that is total reward vs episode number
-2. train without random initialization - store the q values - run it wuth random initialization
-3. if random initialization -- don't update the q table
-"""

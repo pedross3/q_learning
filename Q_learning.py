@@ -60,9 +60,9 @@ def train_q_learning(env,
             #! -------
 
             # here pray for the Q-learning gods for their blessing:
-            q_table[state][action] = q_table[state][action] + alpha * \
-                (reward + gamma *
-                 np.max(q_table[next_state]) - q_table[state][action])
+            q_table[state][action] = q_table[state][action] + alpha * (reward + gamma * np.max(q_table[next_state]) - q_table[state][action])
+            # new q value            old q value            learning    duh   discount         given action and q value - what to expect?
+            #                                                 rate              rate
             # and write on the .npy
 
             state = next_state # moves on to the next state
@@ -75,10 +75,15 @@ def train_q_learning(env,
 
         #! Step 6: Perform epsilon decay
         #! -------
-        if epsilon > epsilon_min:
-            epsilon = epsilon * epsilon_decay
-        else:
-            epsilon = 0
+        
+        epsilon = max(epsilon_min, epsilon * epsilon_decay)
+
+        # if epsilon > epsilon_min:
+        #     epsilon = epsilon * epsilon_decay
+            
+        # else:
+        #     # never reaches epsilon 0.1 to evaluate the end of the training
+        #     epsilon = 0
         print(f"Episode {episode + 1}: Total Reward: {total_reward}")
 
         epsilons.append(epsilon*10) # for scaling reasons on the plot
@@ -109,10 +114,8 @@ def train_q_learning(env,
 def visualize_q_table(hell_state_coordinates = [(2,6), (2, 10), (4, 1), (4, 9), (8, 4), (9, 7), (12, 7), (14, 5)],
                       goal_coordinates=[1, 6],
                       wall_states = [],
-                      actions=["Up", "Down", "Right", "Left"],
+                      actions=["Right", "Left", "Up", "Down"],
                       q_values_path="q_table.npy"):
-
-
 
     # Load the Q-table:
     # -----------------

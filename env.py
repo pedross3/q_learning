@@ -122,18 +122,22 @@ class SootopolisGym(gym.Env):
         if action == 0:  # up
             # print("env: andei pra cima")
             new_state[1] += 1
+            self.reward = -0.1
 
         elif action == 1:  # down
             # print("env: andei pra baixo")
             new_state[1] -= 1
+            self.reward = -0.1
 
         elif action == 2:  # left
             # print("env: andei pra esquerda")
             new_state[0] -= 1
+            self.reward = -0.1
 
         elif action == 3:  # right
             # print("env: andei pra direita")
             new_state[0] += 1
+            self.reward = -0.1
 
         """
         Here no punishment for walking was implemented, because too much states - it ended up in very very negative rewards (around -500)
